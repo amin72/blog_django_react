@@ -18,7 +18,9 @@ class Tag(models.Model):
     name = models.CharField(max_length=128, unique=True, db_index=True)
     slug = models.SlugField(max_length=128,
         unique=True,
-        db_index=True)
+        db_index=True,
+        blank=True,
+        allow_unicode=True)
         
     def save(self,*args,**kwargs):
         # slugify name
