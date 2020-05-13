@@ -54,16 +54,17 @@ class Post(models.Model):
     slug = models.SlugField(_("Slug"),
         max_length=250,
         db_index=True,
+        blank=True,
         allow_unicode=True)
     
     created = models.DateTimeField(_("Created"), auto_now_add=True)
-    updated = models.DateTimeField(_("Updated"), auto_now=False)
+    updated = models.DateTimeField(_("Updated"), auto_now=True)
 
     total_likes = models.PositiveIntegerField(_("Total likes"), default=0)
     total_comments = models.PositiveIntegerField(_("Total comments"),
         default=0)
     
-    status = models.CharField(_("Status"), max_length=50)
+    status = models.CharField(_("Status"), max_length=50, choices=POST_STATUS)
     tags = models.ManyToManyField(Tag, verbose_name=_("Tag"), blank=True)
 
     def save(self,*args,**kwargs):
