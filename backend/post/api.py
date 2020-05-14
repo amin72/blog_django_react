@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from .models import Post
 from .serializers import PostSerializer
+from .paginations import StandardPagination
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -9,6 +10,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.filter(status=Post.STATUS_PUBLISH)
     serializer_class = PostSerializer
     lookup_field = 'slug'
+    pagination_class = StandardPagination
 
     def perform_create(self, serializer):
         # set post's autor
