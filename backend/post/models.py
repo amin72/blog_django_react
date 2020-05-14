@@ -40,10 +40,14 @@ class Post(models.Model):
     """Post model holds blog's articles information"""
 
     # each post has two status (either in draft mode or published)
-    POST_STATUS = (
-        ('draft', _('Draft')),
-        ('published', _('Published'))
+    STATUS_DRAFT = 1
+    STATUS_PUBLISH = 2
+    
+    STATUS_CHOICES = (
+        (STATUS_DRAFT, _('Draft')),
+        (STATUS_PUBLISH, _('Publish')),
     )
+
 
     author = models.ForeignKey(User,
         on_delete=models.DO_NOTHING,
@@ -64,7 +68,8 @@ class Post(models.Model):
     total_comments = models.PositiveIntegerField(_("Total comments"),
         default=0)
     
-    status = models.CharField(_("Status"), max_length=50, choices=POST_STATUS)
+    status = models.SmallIntegerField(choices=STATUS_CHOICES,
+        default=STATUS_DRAFT)
     tags = models.ManyToManyField(Tag, verbose_name=_("Tag"), blank=True)
 
     def save(self,*args,**kwargs):
