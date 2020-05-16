@@ -1,4 +1,5 @@
-from django.db import models
+from django.db import models, IntegrityError
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
@@ -56,11 +57,21 @@ class Post(models.Model):
     title = models.CharField(_("Title"), max_length=250, db_index=True)
     content = models.TextField(_("Content"))
     slug = models.SlugField(_("Slug"),
+        unique=True,
         max_length=250,
         db_index=True,
         blank=True,
         allow_unicode=True)
-    
+
+    # set height and width for image field
+    image_height = models.PositiveIntegerField(_("Image Height"), default=400)
+    image_width = models.PositiveIntegerField(_("Image Width"), default=400)
+
+    image = models.ImageField(_("Image"),
+        upload_to="post/images/",
+        height_field='image_height',
+        width_field='image_width')
+
     created = models.DateTimeField(_("Created"), auto_now_add=True)
     updated = models.DateTimeField(_("Updated"), auto_now=True)
 
@@ -72,10 +83,20 @@ class Post(models.Model):
         default=STATUS_DRAFT)
     tags = models.ManyToManyField(Tag, verbose_name=_("Tag"), blank=True)
 
-    def save(self,*args,**kwargs):
-        # slugify title
-        self.slug = slugify(self.title, True)
-        return super().save(*args,**kwargs)
+    def save(self, *args, **kwargs):
+        now = timezone.now()
+
+        slug = f'{now.year}-{now.month}-{now.day}-'
+        slug += f'{now.hour}-{now.minute}-{now.second}-'
+
+        # now slugify created time and title
+        try:
+            self.slug = slug + slugify(self.title)
+        except IntegrityError:
+            slug += f'{now.microsecond}-'
+            self.slug = slug + slugify(self.title)
+
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
