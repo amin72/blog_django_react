@@ -82,6 +82,7 @@ class Post(models.Model):
     status = models.SmallIntegerField(choices=STATUS_CHOICES,
         default=STATUS_DRAFT)
     tags = models.ManyToManyField(Tag, verbose_name=_("Tag"), blank=True)
+    
 
     def save(self, *args, **kwargs):
         now = timezone.now()
@@ -92,14 +93,21 @@ class Post(models.Model):
         # now slugify created time and title
         try:
             self.slug = slug + slugify(self.title)
+            return super().save(*args, **kwargs)
         except IntegrityError:
             slug += f'{now.microsecond}-'
             self.slug = slug + slugify(self.title)
+            return super().save(*args, **kwargs)
+        except:
+            from uuid import uuid4
+            slug += f'{uuid4().hex}-'
+            self.slug = slug + slugify(self.title)
+            return super().save(*args, **kwargs)
 
-        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
+
     
     class Meta:
         verbose_name = _('Post')
