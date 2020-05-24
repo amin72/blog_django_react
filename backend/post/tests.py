@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test.client import encode_multipart
 
 from rest_framework import status
 
@@ -69,6 +70,7 @@ class PostModelTestCase(TestCase):
             content='Post content',
             image=create_image(),
             status=Post.STATUS_DRAFT)
+
 
     def test_create_post(self):
         """
@@ -167,6 +169,42 @@ class PostModelTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
+    def test_update_post(self):
+        """
+        Test updating posts.
+        Updating post is done via put/patch methods, we must test throttling.
+        """
+
+        post = Post.objects.filter(status=Post.STATUS_PUBLISH).first()
+        post_new_data = {
+            'author': post.author,
+            'title': 'Post (Edited)',
+            'content': 'Content (Edited)',
+            'image': create_image(),
+            'tags': []
+        }
+ 
+        # remove post's image
+        remove_file(post.image.path)
+        
+        response = self.update_post(post.slug, post_new_data)
+        result = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # check updated fields (title, content)
+        self.assertEqual(result['title'], post_new_data['title'])
+        self.assertEqual(result['content'], post_new_data['content'])
+        
+        # let's check throttling
+        post = Post.objects.filter(status=Post.STATUS_PUBLISH).first()
+        post_new_data['image'] = create_image() 
+
+        response = self.update_post(post.slug, post_new_data, 0)
+        self.assertEqual(response.status_code,
+            status.HTTP_429_TOO_MANY_REQUESTS)
+        
+
     def test_get_posts(self):
         """Test getting all published posts"""
 
@@ -203,6 +241,8 @@ class PostModelTestCase(TestCase):
 
 
     def create_post(self, post, time_to_sleep=1):
+        """Helper method to create post"""
+
         # sleep for `time_to_sleep` seconds to pass throttling
         sleep(time_to_sleep)
         # url api
@@ -210,5 +250,22 @@ class PostModelTestCase(TestCase):
         # login
         self.client.login(**self.user_info)
         # send posts data
-        response = self.client.post(url, post)
-        return response
+        return self.client.post(url, post)
+
+
+    def update_post(self, post_slug, new_data, time_to_sleep=1):
+        """Helper method to update post"""
+
+        # sleep for `time_to_sleep` seconds to pass throttling
+        sleep(time_to_sleep)
+        # url api
+        url = reverse('post:post-detail', kwargs={'slug': post_slug})
+        # login
+        self.client.login(**self.user_info)
+        # send posts data
+
+        content = encode_multipart('BoUnDaRyStRiNg', new_data)
+        content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg'
+        
+        # update post via put/patch method
+        return self.client.put(url, content, content_type=content_type)
