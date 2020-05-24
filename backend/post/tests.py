@@ -1,23 +1,42 @@
+import os
 from time import sleep
 from django.test import TestCase
-from django.urls import reverse, resolve
+from django.contrib.auth import get_user_model
+from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+
 from rest_framework import status
+
 from .models import Post
 from .serializers import PostSerializer
 from .api import PostViewSet
-from account.models import User
-from rest_framework.test import APIRequestFactory, force_authenticate
+
+
+User = get_user_model()
+
 
 
 def create_image():
-    image_path = '/home/amin/Pictures/star.jpg'
+    """Create image object for post by given image path"""
 
-    image = SimpleUploadedFile(name='star_image.jpg',
+    image_path = 'static/img/test_image.png'
+
+    image = SimpleUploadedFile(name='test_image.png',
         content=open(image_path, 'rb').read(),
-        content_type='image/jpeg')
+        content_type='image/png')
 
     return image
+
+
+
+def remove_file(path):
+    """Remove a file if exists"""
+    
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+    except Exception as ex:
+        print(ex)
 
 
 
@@ -28,21 +47,41 @@ class PostModelTestCase(TestCase):
             'password': 'admin123456'
         }
 
-        self.factory = APIRequestFactory()
-        self.view = PostViewSet.as_view({'get': 'retrieve'})
-
         self.user = User.objects.create_user(email="admin@example.com",
             **self.user_info)
 
+        # create two post in publish mode
+        Post.objects.create(author=self.user,
+            title='Post test 1',
+            content='Post content',
+            image=create_image(),
+            status=Post.STATUS_PUBLISH)
+        
+        Post.objects.create(author=self.user,
+            title='Post test 2',
+            content='Post content',
+            image=create_image(),
+            status=Post.STATUS_PUBLISH)
+
+        # and one with draft status
+        Post.objects.create(author=self.user,
+            title='Post test 3',
+            content='Post content',
+            image=create_image(),
+            status=Post.STATUS_DRAFT)
 
     def test_create_post(self):
+        """
+        Test creating posts.
+        Since creating post is done via post method, we must test throttling.
+        """
+
         posts = [
             {
                 'author': self.user,
                 'title': 'Post 1',
                 'content': 'Post Content 1',
                 'image': create_image(),
-                'status': Post.STATUS_PUBLISH,
                 'tags': []
             },
             {
@@ -50,7 +89,6 @@ class PostModelTestCase(TestCase):
                 'title': 'Post 2',
                 'content': 'Post Content 2',
                 'image': create_image(),
-                'status': Post.STATUS_PUBLISH,
                 'tags': []
             },
             {
@@ -58,7 +96,6 @@ class PostModelTestCase(TestCase):
                 'title': 'Post 3',
                 'content': 'Post Content 3',
                 'image': create_image(),
-                'status': Post.STATUS_DRAFT,
                 'tags': []
             },
             {
@@ -66,7 +103,6 @@ class PostModelTestCase(TestCase):
                 'title': 'Post 4',
                 'content': 'Post Content 4',
                 'image': create_image(),
-                'status': Post.STATUS_PUBLISH,
                 'tags': []
             },
             {
@@ -74,7 +110,6 @@ class PostModelTestCase(TestCase):
                 'title': 'Post 5',
                 'content': 'Post Content 5',
                 'image': create_image(),
-                'status': Post.STATUS_DRAFT,
                 'tags': []
             },
             {
@@ -82,7 +117,6 @@ class PostModelTestCase(TestCase):
                 'title': 'Post 6',
                 'content': 'Post Content 6',
                 'image': create_image(),
-                'status': Post.STATUS_PUBLISH,
                 'tags': []
             },            
             {
@@ -90,7 +124,6 @@ class PostModelTestCase(TestCase):
                 'title': 'Post 7',
                 'content': 'Post Content 7',
                 'image': create_image(),
-                'status': Post.STATUS_PUBLISH,
                 'tags': []
             },            
             {
@@ -98,7 +131,6 @@ class PostModelTestCase(TestCase):
                 'title': 'Post 1',
                 'content': 'Post Content 1',
                 'image': create_image(),
-                'status': Post.STATUS_DRAFT,
                 'tags': []
             },
             {
@@ -106,7 +138,6 @@ class PostModelTestCase(TestCase):
                 'title': 'Post 2',
                 'content': 'Post Content 2',
                 'image': create_image(),
-                'status': Post.STATUS_PUBLISH,
                 'tags': []
             }
         ]
@@ -122,17 +153,35 @@ class PostModelTestCase(TestCase):
         # we cannot create more than 2 posts in one minute
         # so here we get 429 (too many request) response
         # setting time_to_sleep to 0 will raise throttling exception
-        response = self.create_post(posts[2], 0)
+        response = self.create_post(posts[3], 0)
         # check response status
         self.assertEqual(response.status_code,
             status.HTTP_429_TOO_MANY_REQUESTS)
         
+        # try to create post after one minute (throttling)
         print('Waiting for one minute...')
         sleep(60)
         print('Trying to create one more post...')
-        response = self.create_post(posts[3], 1)
+        response = self.create_post(posts[4], 1)
         # check response status
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+    def test_get_posts(self):
+        """Test getting all published posts"""
+
+        url = reverse('post:post-list')
+        response = self.client.get(url)
+        result = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(result['count'], 2) # two posts in publish status
+
+
+    def tearDown(self):
+        # remove all posts image files
+        posts = Post.objects.all()
+        for post in posts:
+            remove_file(post.image.path)
 
 
     def create_post(self, post, time_to_sleep=1):
@@ -145,4 +194,3 @@ class PostModelTestCase(TestCase):
         # send posts data
         response = self.client.post(url, post)
         return response
-        
