@@ -177,6 +177,24 @@ class PostModelTestCase(TestCase):
         self.assertEqual(result['count'], 2) # two posts in publish status
 
 
+    def test_detail_post(self):
+        """Test getting single post"""
+
+        posts = Post.objects.all()
+        published_post = posts.filter(status=Post.STATUS_PUBLISH).first()
+        draft_post = posts.filter(status=Post.STATUS_DRAFT).first()
+
+        # get published post (200)
+        url = reverse('post:post-detail', kwargs={'slug': published_post.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # get draft post (404)
+        url = reverse('post:post-detail', kwargs={'slug': draft_post.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
     def tearDown(self):
         # remove all posts image files
         posts = Post.objects.all()
