@@ -7,10 +7,10 @@ from .serializers import PostSerializer
 from .permissions import IsAuthorOrReadyOnly
 from .paginations import StandardPagination
 from .throttles import (
-    PostSecThrottle,
-    PostMinThrottle,
-    PostHourThrottle,
-    PostDayThrottle,
+    PostSecUserRateThrottle,
+    PostMinUserRateThrottle,
+    PostHourUserRateThrottle,
+    PostDayUserRateThrottle
 )
 
 
@@ -23,10 +23,10 @@ class PostViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
     pagination_class = StandardPagination
     throttle_classes = [
-        PostSecThrottle,
-        PostMinThrottle,
-        PostHourThrottle,
-        PostDayThrottle,
+        PostSecUserRateThrottle,
+        PostMinUserRateThrottle,
+        PostHourUserRateThrottle,
+        PostDayUserRateThrottle,
      ]
 
     def perform_create(self, serializer):
