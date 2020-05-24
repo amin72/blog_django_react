@@ -131,3 +131,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 AUTH_USER_MODEL = 'account.User'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'post_sec': '1/second',
+        'post_min': '2/min',
+        'post_hour': '5/hour',
+        'post_day': '15/hour',
+    }
+}

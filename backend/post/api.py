@@ -6,6 +6,12 @@ from .models import Post
 from .serializers import PostSerializer
 from .permissions import IsAuthorOrReadyOnly
 from .paginations import StandardPagination
+from .throttles import (
+    PostSecThrottle,
+    PostMinThrottle,
+    PostHourThrottle,
+    PostDayThrottle,
+)
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -16,6 +22,12 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthorOrReadyOnly, IsAuthenticatedOrReadOnly]
     lookup_field = 'slug'
     pagination_class = StandardPagination
+    throttle_classes = [
+        PostSecThrottle,
+        PostMinThrottle,
+        PostHourThrottle,
+        PostDayThrottle,
+     ]
 
     def perform_create(self, serializer):
         # set post's autor
