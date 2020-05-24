@@ -186,7 +186,7 @@ class PostModelTestCase(TestCase):
  
         # remove post's image
         remove_file(post.image.path)
-        
+
         response = self.update_post(post.slug, post_new_data)
         result = response.json()
 
@@ -203,7 +203,22 @@ class PostModelTestCase(TestCase):
         response = self.update_post(post.slug, post_new_data, 0)
         self.assertEqual(response.status_code,
             status.HTTP_429_TOO_MANY_REQUESTS)
-        
+    
+
+    def test_delete_post(self):
+        """Test deleting post."""
+
+        post = Post.objects.filter(status=Post.STATUS_PUBLISH).first()
+        url = reverse('post:post-detail', kwargs={'slug': post.slug})
+
+        sleep(1) # to pass throtteling
+        # login
+        self.client.login(**self.user_info)
+        # delete post
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        remove_file(post.image.path)
+
 
     def test_get_posts(self):
         """Test getting all published posts"""
