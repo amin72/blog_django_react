@@ -1,78 +1,148 @@
-import time
+from time import sleep
 from django.test import TestCase
-from django.urls import reverse
-from post.models import Post
-from account.models import User
-
+from django.urls import reverse, resolve
 from django.core.files.uploadedfile import SimpleUploadedFile
+from rest_framework import status
+from .models import Post
+from .serializers import PostSerializer
+from .api import PostViewSet
+from account.models import User
+from rest_framework.test import APIRequestFactory, force_authenticate
+
+
+def create_image():
+    image_path = '/home/amin/Pictures/star.jpg'
+
+    image = SimpleUploadedFile(name='star_image.jpg',
+        content=open(image_path, 'rb').read(),
+        content_type='image/jpeg')
+
+    return image
 
 
 
 class PostModelTestCase(TestCase):
     def setUp(self):
-        image_path = '/home/amin/Pictures/star.jpg'
-        image = SimpleUploadedFile(name='start_image.jpg',
-            content=open(image_path, 'rb').read(),
-            content_type='image/jpeg')
+        self.user_info = {
+            'username': 'admin',
+            'password': 'admin123456'
+        }
+
+        self.factory = APIRequestFactory()
+        self.view = PostViewSet.as_view({'get': 'retrieve'})
+
+        self.user = User.objects.create_user(email="admin@example.com",
+            **self.user_info)
 
 
-        user0 = User.objects.create_user(username="testuser0",
-            password="test123456",
-            email="testuser0@example.com")
+    def test_create_post(self):
+        posts = [
+            {
+                'author': self.user,
+                'title': 'Post 1',
+                'content': 'Post Content 1',
+                'image': create_image(),
+                'status': Post.STATUS_PUBLISH,
+                'tags': []
+            },
+            {
+                'author': self.user,
+                'title': 'Post 2',
+                'content': 'Post Content 2',
+                'image': create_image(),
+                'status': Post.STATUS_PUBLISH,
+                'tags': []
+            },
+            {
+                'author': self.user,
+                'title': 'Post 3',
+                'content': 'Post Content 3',
+                'image': create_image(),
+                'status': Post.STATUS_DRAFT,
+                'tags': []
+            },
+            {
+                'author': self.user,
+                'title': 'Post 4',
+                'content': 'Post Content 4',
+                'image': create_image(),
+                'status': Post.STATUS_PUBLISH,
+                'tags': []
+            },
+            {
+                'author': self.user,
+                'title': 'Post 5',
+                'content': 'Post Content 5',
+                'image': create_image(),
+                'status': Post.STATUS_DRAFT,
+                'tags': []
+            },
+            {
+                'author': self.user,
+                'title': 'Post 6',
+                'content': 'Post Content 6',
+                'image': create_image(),
+                'status': Post.STATUS_PUBLISH,
+                'tags': []
+            },            
+            {
+                'author': self.user,
+                'title': 'Post 7',
+                'content': 'Post Content 7',
+                'image': create_image(),
+                'status': Post.STATUS_PUBLISH,
+                'tags': []
+            },            
+            {
+                'author': self.user,
+                'title': 'Post 1',
+                'content': 'Post Content 1',
+                'image': create_image(),
+                'status': Post.STATUS_DRAFT,
+                'tags': []
+            },
+            {
+                'author': self.user,
+                'title': 'Post 2',
+                'content': 'Post Content 2',
+                'image': create_image(),
+                'status': Post.STATUS_PUBLISH,
+                'tags': []
+            }
+        ]
+
+        # we can create 2 posts in one minute
+        # also one post per second
+        for post in posts[:2]:
+            # setting time_to_sleep to 1 will be ok
+            response = self.create_post(post, 1)
+            # check response status
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
-        # create six posts
-        # 3 of thme have published status and 1 draft
+        # we cannot create more than 2 posts in one minute
+        # so here we get 429 (too many request) response
+        # setting time_to_sleep to 0 will raise throttling exception
+        response = self.create_post(posts[2], 0)
+        # check response status
+        self.assertEqual(response.status_code,
+            status.HTTP_429_TOO_MANY_REQUESTS)
         
-        # published post
-        Post.objects.create(author=user0,
-            title='Post 1',
-            content='Post Content 1',
-            image=image,
-            status=Post.STATUS_PUBLISH)
+        print('Waiting for one minute...')
+        sleep(60)
+        print('Trying to create one more post...')
+        response = self.create_post(posts[3], 1)
+        # check response status
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+    def create_post(self, post, time_to_sleep=1):
+        # sleep for `time_to_sleep` seconds to pass throttling
+        sleep(time_to_sleep)
+        # url api
+        url = reverse('post:post-list')
+        # login
+        self.client.login(**self.user_info)
+        # send posts data
+        response = self.client.post(url, post)
+        return response
         
-        # published post
-        Post.objects.create(author=user0,
-            title='Post 2',
-            content='Post Content 2',
-            image=image,
-            status=Post.STATUS_PUBLISH)
-        time.sleep(1)
-
-        # draft post
-        Post.objects.create(author=user0,
-            title='Post 2',
-            content='Post Content 2',
-            image=image,
-            status=Post.STATUS_DRAFT)
-        time.sleep(1)
-
-        # draft post
-        Post.objects.create(author=user0,
-            title='Post 2',
-            content='Post Content 2',
-            image=image,
-            status=Post.STATUS_DRAFT)
-
-        # draft post
-        Post.objects.create(author=user0,
-            title='Post 3',
-            content='Post Content 3',
-            image=image,
-            status=Post.STATUS_DRAFT)
-
-        # published post
-        Post.objects.create(author=user0,
-            title='Post 4',
-            content='Post Content 4',
-            image=image,
-            status=Post.STATUS_PUBLISH)
-    
-
-    def test_post_list(self):
-        response = self.client.get(reverse('post:post-list'))
-        self.assertEqual(response.status_code, 200)
-        data = response.json()
-        
-        # we must get three posts (three posts which thier status is Published)
-        self.assertEqual(data['count'], 3)
-        self.assertEqual(len(data['results']), 3)
