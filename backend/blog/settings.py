@@ -42,9 +42,10 @@ INSTALLED_APPS = [
     'rest_framework',
     
     # local apps
-    'account.apps.AccountConfig',
+    'user.apps.UserConfig',
     'post.apps.PostConfig',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -130,7 +131,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-AUTH_USER_MODEL = 'account.User'
+AUTH_USER_MODEL = 'user.User'
 
 
 REST_FRAMEWORK = {
