@@ -11,6 +11,9 @@ urlpatterns = [
     # post urls
     path('api/v1/posts/', include('post.urls')),
 
+    # user urls
+    path('api/v1/users/', include('user.urls')),
+
     # jwt: obtain token
     path('api/v1/token/',
         jwt_views.TokenObtainPairView.as_view(),
