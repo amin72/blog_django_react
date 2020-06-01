@@ -10,13 +10,16 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
             required=True,
+            max_length=User.MAX_EMAIL_LENGTH,
             validators=[UniqueValidator(queryset=User.objects.all())])
 
     username = serializers.CharField(
-            max_length=32,
+            max_length=User.MAX_USERNAME_LENGTH,
             validators=[UniqueValidator(queryset=User.objects.all())])
 
-    password = serializers.CharField(min_length=8, write_only=True)
+    password = serializers.CharField(min_length=User.MIN_PASSWORD_LENGTH,
+        max_length=User.MAX_PASSWORD_LENGTH,
+        write_only=True)
 
     
     def create(self, validated_data):
