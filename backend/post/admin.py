@@ -15,4 +15,3 @@ class PostAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ['name']
     search_fields = ['name']
-    readonly_fields = ['name']
