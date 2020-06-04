@@ -141,3 +141,48 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
 }
+
+
+# Logging setting
+if DEBUG == False:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'standard': {
+                'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+                'datefmt' : "%d/%b/%Y %H:%M:%S"
+            },
+        },
+        'handlers': {
+            'logfile': {
+                'level':'WARN',
+                'class':'logging.handlers.RotatingFileHandler',
+                'filename': os.path.join(BASE_DIR, 'logfile'),
+                'maxBytes': 50000,
+                'backupCount': 2,
+                'formatter': 'standard',
+            },
+            'console':{
+                'level':'INFO',
+                'class':'logging.StreamHandler',
+                'formatter': 'standard'
+            },
+            'mail_admins': {
+                'level': 'ERROR',
+                'class': 'django.utils.log.AdminEmailHandler',
+            }
+        },
+        'loggers': {
+            'django': {
+                'handlers':['console' , 'logfile' , 'mail_admins'],
+                'propagate': True,
+                'level':'WARN',
+            },
+            'django.request':{
+                'handlers':['console' , 'logfile' , 'mail_admins'],
+                'propagate': True,
+                'level':'ERROR',
+            }
+        }
+    }

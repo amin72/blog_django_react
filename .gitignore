@@ -18,3 +18,4 @@ script.sh
 tmp/
 db.sqlite3
 media/
+logfile*
