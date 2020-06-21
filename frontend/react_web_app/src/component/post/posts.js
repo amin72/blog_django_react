@@ -11,7 +11,7 @@ class Posts extends Component {
             <Consumer>
             {
                 value => {
-                    const { posts } = value
+                    const { posts, user } = value;
 
                     return (
                         <Fragment>
@@ -19,12 +19,15 @@ class Posts extends Component {
                             
                             { posts.map(post => (
                                 <div key={post.slug} className="card rounded my-2">
-                                    <div class="card-body">
+                                    <div className="card-body">
                                         <Link to={`/post/${post.slug}`}>
-                                            <img className="img-small d-inline" src={post.image} />
+                                            <img className="img-small d-inline" src={post.image} alt={post.title} />
                                             <span className="ml-2">{post.title}</span>
                                         </Link>
-                                        <small className="d-block mt-2 ml-2">Created at: {to_jalali(post.created)}</small>
+                                        <div className="col-12 mt-2">
+                                            { post.author === user.username ? '* You are owner' : `Author: ${post.author}` }
+                                        </div>
+                                        <small className="d-block mt-2 ml-2 ml-3">Created at: {to_jalali(post.created)}</small>
                                     </div>
                                 </div>
                             ))}
