@@ -19,3 +19,4 @@ tmp/
 db.sqlite3
 media/
 logfile*
+backend/.coverage
