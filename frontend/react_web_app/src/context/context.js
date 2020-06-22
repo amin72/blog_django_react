@@ -86,10 +86,9 @@ export class Provider extends Component {
 
         if (access_token) {
             try {
-                const headers = { Authorization: `Bearer ${access_token}` };
                 response = await axios.post(USER_DETAIL_URL, {}, {
                     headers: {
-                        authorization: `Bearer ${access_token}`
+                        Authorization: `Bearer ${access_token}`
                     }
                 });
 

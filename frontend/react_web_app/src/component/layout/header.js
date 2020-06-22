@@ -36,7 +36,11 @@ class Header extends Component {
                                     <li className="nav-item active">
                                         <Link to="/" className="nav-link">Home</Link>
                                     </li>
+                                    <li className="nav-item">
+                                        <Link to="/post/new" className="nav-link">New Post</Link>
+                                    </li>
                                 </ul>
+
                                 {/* show login, register links is user is unathenticated */}
                                 { !user.isAuthenticated ? (
                                     <ul className="navbar-nav ml-auto mt-2 mt-lg-0">

@@ -9,6 +9,7 @@ import Header from './component/layout/header';
 import { Provider } from './context/context'
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import CreatePost from './component/post/create_post';
 
 
 class App extends Component {
@@ -24,7 +25,9 @@ class App extends Component {
 								<Route exact path="/user/login" component={Login} />
 								<Route exact path="/user/register" component={Register} />
 								<Route exact path="/" component={Posts} />
+								<Route exact path="/post/new" component={CreatePost} />
 								<Route exact path="/post/:slug" component={Post} />
+								{/* <Route exact path="/post/:slug/edit" component={EditPost} /> */}
 							</Switch>
 						</div>
 					</div>
