@@ -13,7 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
     )
 
     tags = serializers.SlugRelatedField(
-        slug_field='name',
+        slug_field='slug',
         queryset=Tag.objects.all(),
         many=True
     )
@@ -37,3 +37,13 @@ class PostSerializer(serializers.ModelSerializer):
             'update',
             'total_likes',
             'total_comments']
+
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = [
+            'name',
+            'slug'
+        ]
