@@ -37,6 +37,8 @@ class Login extends Component {
                     type: GET_TOKEN,
                     payload: this.state.username
                 })
+
+                this.props.history.push(this.props.location.state.from.pathname);
             }).catch(err => 
                 console.log("Wrong username/password!")
             )
@@ -49,11 +51,11 @@ class Login extends Component {
         return (
             <Consumer>
                 { value => {
-                    const { dispatch, user } = value;
+                    const { dispatch, user } = value.state;
 
                     return user.isAuthenticated ? (
                         // if user is authenticated redirect to index
-                        <Redirect to="/" />
+                        <Redirect to={this.props.location.state.from.pathname || "/"} />
                     ) : (
                         <div className="col-md-6 m-auto">
                             <div className="card card-body mt-5">

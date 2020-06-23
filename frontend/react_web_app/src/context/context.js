@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 
 import axios from 'axios'
-import { GET_TOKEN, CREATE_USER, LOGOUT_USER, USER_DETAIL } from './types'
-import { FETCH_POSTS_URL, REFRESH_TOKEN_URL, USER_DETAIL_URL } from '../other/urls';
-import { ACCESS_TOKEN } from '../other/constants';
+import { GET_TOKEN, CREATE_USER, LOGOUT_USER, USER_DETAIL, FETCH_POSTS_SUCCESS } from './types'
+import { USER_DETAIL_URL } from '../other/urls';
 
 
-const Context = React.createContext();
+export const Context = React.createContext();
 
 
 const reducer = (state, action) => {
@@ -31,6 +30,12 @@ const reducer = (state, action) => {
                 }
             }
         
+        case FETCH_POSTS_SUCCESS:
+            return {
+                ...state,
+                posts: action.payload
+            }
+
         default:
             return state
     }
@@ -56,61 +61,48 @@ export class Provider extends Component {
     }
 
 
-    async componentDidMount() {
-        // get latest posts
-        let response = await axios.get(FETCH_POSTS_URL)
-        this.setState({posts: response.data.results});
+    componentDidMount() {
+        this.authenticate();
+    }
 
-        // refresh token
-        const refresh_token = {
-            refresh: localStorage.getItem('refresh')
-        };
 
-        if (refresh_token.refresh) {
-            try {
-                response = await axios.post(REFRESH_TOKEN_URL, refresh_token);
-                localStorage.setItem(ACCESS_TOKEN, response.data.access);
-                this.state.dispatch({
-                    type: GET_TOKEN
-                });
-            } catch(err) {
-                // `refresh token` is invalid (401 error)
-                // or it doesn't exist in localStorage (400 error)
-                // user must login and get access, refresh tokens
-                console.log(err.message);
-            }
-        }
-
+    authenticate = async () => {
         // access token
         const access_token = localStorage.getItem('access');
 
         if (access_token) {
-            try {
-                response = await axios.post(USER_DETAIL_URL, {}, {
-                    headers: {
-                        Authorization: `Bearer ${access_token}`
-                    }
-                });
-
+            await axios.post(USER_DETAIL_URL, {}, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            })
+            .then(res => {
+                const username = res.data.user.username;
+                
                 this.state.dispatch({
                     type: USER_DETAIL,
-                    payload: response.data.user.username
+                    payload: username
                 });
-            } catch(err) {
-                console.log(err.response);
-            }
+
+                sessionStorage.user = JSON.stringify({name: username});
+            }).catch(err => console.log(err.response))
         }
     }
 
 
     render() {
+        const contextState = {
+            state: this.state,
+            authenticate: this.authenticate
+        };
+
         return (
-            <Context.Provider value={this.state}>
+            <Context.Provider value={contextState}>
                 { this.props.children }
             </Context.Provider>
-        )
+        );
     }
 }
 
 
-export const Consumer = Context.Consumer
+export const Consumer = Context.Consumer;

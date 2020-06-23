@@ -17,7 +17,7 @@ class Post extends Component {
             <Consumer>
                 { value => {
 
-                    const { dispatch, posts } = value;
+                    const { posts } = value;
                     const filter_posts = posts.filter(post => post.slug === slug);
                     let post;
 

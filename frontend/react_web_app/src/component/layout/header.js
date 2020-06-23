@@ -22,7 +22,7 @@ class Header extends Component {
         return (
             <Consumer>
                 { value => {
-                    const { dispatch, user } = value;
+                    const { dispatch, user } = value.state;
 
                     return (
                         <nav className="navbar navbar-expand-lg navbar-light bg-light">

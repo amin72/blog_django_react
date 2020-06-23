@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 
 import { Consumer } from '../../context/context';
 import { CREATE_POST_URL, FETCH_TAGS_URL } from '../../other/urls';
@@ -26,14 +25,15 @@ class CreatePost extends Component {
 
     onTagsChange = e => {
         var options = e.target.options;
+        var tags = [];
 
-        var value = [];
-        for (var i = 0, l = options.length; i < l; i++) {
+        for (var i = 0; i < options.length; i++) {
             if (options[i].selected) {
-                value.push(options[i].value);
+                tags.push(options[i].value);
             }
         }
-        this.setState({tags: value});
+
+        this.setState({tags: tags});
     }
     
 
@@ -69,8 +69,7 @@ class CreatePost extends Component {
             }})
             .then(res => res.data)
             .then(data => {
-                console.log('Post created!');
-                return <Redirect to="/" />
+                this.props.history.push('/');
             }).catch(err => console.log(err.response))
     }
 
@@ -99,7 +98,7 @@ class CreatePost extends Component {
     }
 
 
-    async componentDidMount() {
+    componentDidMount() {
         this.loadTags();
     }
 
@@ -115,11 +114,11 @@ class CreatePost extends Component {
         return (
             <Consumer>
                 { value => {
-                    const { dispatch, user } = value;
+                    const { dispatch, user } = value.state;
 
                     return !user.isAuthenticated ? (
-                        // if user isn't the owner of post redirect back to post
-                        <Redirect to="/" />
+                        // if user isn't the owner of post redirect to login
+                        this.props.history.push('/user/login')
                     ) : (
                         <div className="col-md-8 m-auto">
                             <div className="card card-body mt-5">

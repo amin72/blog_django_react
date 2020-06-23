@@ -70,7 +70,7 @@ class Register extends Component {
         return (
             <Consumer>
                 { value => {
-                    const { dispatch, user } = value;
+                    const { dispatch, user } = value.state;
 
                     return user.isAuthenticated ? (
                         // if user is authenticated redirect to index

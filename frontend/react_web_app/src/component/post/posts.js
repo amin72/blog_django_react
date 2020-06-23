@@ -1,17 +1,43 @@
 import React, {Component, Fragment} from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
-import { Consumer } from '../../context/context';
+import { Context, Consumer } from '../../context/context';
 import { to_jalali } from '../../other/date_convertor';
+import { FETCH_POSTS_URL } from '../../other/urls';
+import { FETCH_POSTS_SUCCESS } from '../../context/types';
 
 
 class Posts extends Component {
+    loadPosts = async (dispatch) => {
+        const response = await axios.get(FETCH_POSTS_URL);
+
+        try {
+            const posts = response.data.results;
+
+            dispatch({
+                type: FETCH_POSTS_SUCCESS,
+                payload: posts
+            })
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
+
+    componentDidMount() {
+        // get latest posts
+        let { dispatch } = this.context.state;
+        this.loadPosts(dispatch);
+    }
+
+
     render() {
         return (
             <Consumer>
             {
                 value => {
-                    const { posts, user } = value;
+                    const { posts, user } = value.state;
 
                     return (
                         <Fragment>
@@ -40,5 +66,7 @@ class Posts extends Component {
     }
 }
 
+
+Posts.contextType = Context;
 
 export default Posts;
