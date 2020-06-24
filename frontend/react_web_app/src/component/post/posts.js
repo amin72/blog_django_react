@@ -9,27 +9,11 @@ import { FETCH_POSTS_SUCCESS } from '../../context/types';
 
 
 class Posts extends Component {
-    loadPosts = async (dispatch) => {
-        const response = await axios.get(FETCH_POSTS_URL);
-
-        try {
-            const posts = response.data.results;
-
-            dispatch({
-                type: FETCH_POSTS_SUCCESS,
-                payload: posts
-            })
-        } catch(err) {
-            console.log(err.message);
-        }
-    }
-
-
-    componentDidMount() {
-        // get latest posts
-        let { dispatch } = this.context.state;
-        this.loadPosts(dispatch);
-    }
+    // componentDidMount() {
+    //     // get latest posts
+    //     let { dispatch } = this.context.state;
+    //     this.loadPosts(dispatch);
+    // }
 
 
     render() {

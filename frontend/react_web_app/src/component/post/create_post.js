@@ -117,7 +117,7 @@ class CreatePost extends Component {
                     const { dispatch, user } = value.state;
 
                     return !user.isAuthenticated ? (
-                        // if user isn't the owner of post redirect to login
+                        // if user isn't logged in, redirect to login
                         this.props.history.push('/user/login')
                     ) : (
                         <div className="col-md-8 m-auto">

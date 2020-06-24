@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 
 import { Consumer } from '../../context/context';
-import { LOGOUT_USER } from '../../context/types';
+import { LOGOUT_USER_SUCCESS } from '../../context/types';
 
 
 class Header extends Component {
@@ -13,7 +13,7 @@ class Header extends Component {
         localStorage.removeItem('refresh');
 
         dispatch({
-            type: LOGOUT_USER
+            type: LOGOUT_USER_SUCCESS
         });
     }
 

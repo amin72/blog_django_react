@@ -3,7 +3,10 @@ import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 
 import { Consumer } from '../../context/context';
-import { GET_TOKEN } from '../../context/types';
+import {
+    GET_TOKEN_SUCCESS,
+    GET_TOKEN_FAIL
+} from '../../context/types';
 
 
 class Register extends Component {
@@ -55,11 +58,12 @@ class Register extends Component {
                 localStorage.setItem('refresh', data.refresh);
 
                 dispatch({
-                    type: GET_TOKEN,
+                    type: GET_TOKEN_SUCCESS,
                 })
             }).catch(err => {
-                const messages = err.response.data;
-                console.log(messages);
+                dispatch({
+                    type: GET_TOKEN_FAIL,
+                });
             });
     }
 

@@ -1,8 +1,21 @@
 import React, { Component } from 'react'
 
 import axios from 'axios'
-import { GET_TOKEN, CREATE_USER, LOGOUT_USER, USER_DETAIL, FETCH_POSTS_SUCCESS } from './types'
-import { USER_DETAIL_URL } from '../other/urls';
+
+import {
+    GET_TOKEN_SUCCESS,
+    GET_TOKEN_FAIL,
+    CREATE_USER_SUCCESS,
+    CREATE_USER_FAIL,
+    LOGOUT_USER_SUCCESS,
+    LOGOUT_USER_FAIL,
+    GET_USER_DETAIL_SUCCESS,
+    GET_USER_DETAIL_FAIL,
+    FETCH_POSTS_SUCCESS,
+    FETCH_POSTS_FAIL,
+} from './types'
+
+import { USER_DETAIL_URL, FETCH_POSTS_URL } from '../other/urls';
 
 
 export const Context = React.createContext();
@@ -10,9 +23,9 @@ export const Context = React.createContext();
 
 const reducer = (state, action) => {
     switch(action.type) {
-        case GET_TOKEN:   // login
-        case CREATE_USER: // register
-        case USER_DETAIL:
+        case GET_TOKEN_SUCCESS:   // login
+        case CREATE_USER_SUCCESS: // register
+        case GET_USER_DETAIL_SUCCESS: // user detail
             return {
                 ...state,
                 user: {
@@ -21,7 +34,7 @@ const reducer = (state, action) => {
                 }
             }
         
-        case LOGOUT_USER:
+        case LOGOUT_USER_SUCCESS:
             return {
                 ...state,
                 user: {
@@ -62,11 +75,35 @@ export class Provider extends Component {
 
 
     componentDidMount() {
+        this.loadPosts(); // fetch latest posts
         this.authenticate();
     }
 
 
+    // TODO: load next pages
+    loadPosts = async (page=1) => {
+        const { dispatch } = this.state;
+        
+        const response = await axios.get(FETCH_POSTS_URL);
+
+        try {
+            const posts = response.data.results;
+
+            dispatch({
+                type: FETCH_POSTS_SUCCESS,
+                payload: posts
+            })
+        } catch(err) {
+            dispatch({
+                type: FETCH_POSTS_FAIL,
+            })
+        }
+    }
+
+
     authenticate = async () => {
+        const { dispatch } = this.state;
+
         // access token
         const access_token = localStorage.getItem('access');
 
@@ -79,13 +116,17 @@ export class Provider extends Component {
             .then(res => {
                 const username = res.data.user.username;
                 
-                this.state.dispatch({
-                    type: USER_DETAIL,
+                dispatch({
+                    type: GET_USER_DETAIL_SUCCESS,
                     payload: username
                 });
 
                 sessionStorage.user = JSON.stringify({name: username});
-            }).catch(err => console.log(err.response))
+            }).catch(err => {
+                dispatch({
+                    type: GET_USER_DETAIL_FAIL
+                })
+            })
         }
     }
 
