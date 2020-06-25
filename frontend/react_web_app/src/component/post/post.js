@@ -12,6 +12,13 @@ import {
 
 
 class Post extends Component {
+    signal = axios.CancelToken.source();
+
+
+    state = {
+        post: null
+    }
+
     
     deletePost = async (slug, dispatch) => {
         // access token
@@ -41,6 +48,38 @@ class Post extends Component {
     }
 
 
+    fetchPost = async () => {
+        // access token
+        const access_token = localStorage.getItem('access');
+        const { slug } = this.props.match.params;
+        const url = `http://127.0.0.1:8000/api/v1/posts/${slug}/`;
+        
+        try {
+            const response = await axios.get(url, {
+                cancelToken: this.signal.token,
+            });
+            
+            const post = response.data;
+
+            this.setState({
+                post: post,
+            });
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
+
+    componentDidMount() {
+        this.fetchPost();
+    }
+
+
+    componentWillUnmount() {
+        this.signal.cancel('Api is being canceled');
+    }
+
+
     render() {
         const { slug } = this.props.match.params;
 
@@ -48,19 +87,14 @@ class Post extends Component {
             <Consumer>
                 { value => {
 
-                    const { posts, user, dispatch } = value.state;
-                    const filter_posts = posts.filter(post => post.slug === slug);
-                    let post;
-
-                    if (filter_posts.length === 1) {
-                        post = filter_posts[0];
-                    }
+                    const { user, dispatch } = value.state;
+                    const { post } = this.state;
 
                     return (
                         <Fragment>
                             {post ? (
                                 <div>
-                                    <div className="row mt-5 mb-2">
+                                    <div className="row mt-5 mb-3">
                                         <div className="col-12">
                                             <img className="post-img img-fluid d-block mx-auto" src={post.image} alt={post.title} />
                                             <h1 className="mt-5">{post.title}</h1>
@@ -77,7 +111,7 @@ class Post extends Component {
                                         <div className="col-12">
                                             <hr />
                                             <Link to={`/post/${post.slug}/edit`} className="btn btn-success mr-2">Edit Post</Link>
-                                            <button onClick={() => this.deletePost(slug)} className="btn btn-danger">Delete Post</button>
+                                            <button onClick={() => this.deletePost(slug, dispatch)} className="btn btn-danger">Delete Post</button>
                                         </div>
                                     </div>
                                     )}

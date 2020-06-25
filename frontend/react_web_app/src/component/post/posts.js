@@ -5,15 +5,34 @@ import axios from 'axios';
 import { Context, Consumer } from '../../context/context';
 import { to_jalali } from '../../other/date_convertor';
 import { FETCH_POSTS_URL } from '../../other/urls';
-import { FETCH_POSTS_SUCCESS } from '../../context/types';
+import { FETCH_POSTS_SUCCESS, FETCH_POSTS_FAIL } from '../../context/types';
 
 
 class Posts extends Component {
-    // componentDidMount() {
-    //     // get latest posts
-    //     let { dispatch } = this.context.state;
-    //     this.loadPosts(dispatch);
-    // }
+    // TODO: load next pages
+    fetchPosts = async (dispatch, page=1) => {
+        const response = await axios.get(FETCH_POSTS_URL);
+
+        try {
+            const posts = response.data.results;
+
+            dispatch({
+                type: FETCH_POSTS_SUCCESS,
+                payload: posts
+            })
+        } catch(err) {
+            dispatch({
+                type: FETCH_POSTS_FAIL,
+            });
+        }
+    }
+
+
+    componentDidMount() {
+        // get latest posts
+        const { dispatch } = this.context.state;
+        this.fetchPosts(dispatch);
+    }
 
 
     render() {

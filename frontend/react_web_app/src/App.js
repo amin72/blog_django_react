@@ -11,6 +11,7 @@ import CreatePost from './component/post/create_post';
 
 import PrivateRoute from './other/private_route';
 import { Provider } from './context/context';
+import EditPost from './component/post/edit_post';
 
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
 								{/* <Route exact path="/post/new" component={CreatePost} /> */}
 								<PrivateRoute exact path="/post/new" component={CreatePost} />
 								<Route exact path="/post/:slug" component={Post} />
+								<PrivateRoute exact path="/post/:slug/edit" component={EditPost} />
 								<Route exact path="/" component={Posts} />
 								{/* <Route exact path="/post/:slug/edit" component={EditPost} /> */}
 							</Switch>

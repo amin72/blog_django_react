@@ -75,29 +75,7 @@ export class Provider extends Component {
 
 
     componentDidMount() {
-        this.loadPosts(); // fetch latest posts
         this.authenticate();
-    }
-
-
-    // TODO: load next pages
-    loadPosts = async (page=1) => {
-        const { dispatch } = this.state;
-        
-        const response = await axios.get(FETCH_POSTS_URL);
-
-        try {
-            const posts = response.data.results;
-
-            dispatch({
-                type: FETCH_POSTS_SUCCESS,
-                payload: posts
-            })
-        } catch(err) {
-            dispatch({
-                type: FETCH_POSTS_FAIL,
-            })
-        }
     }
 
 
