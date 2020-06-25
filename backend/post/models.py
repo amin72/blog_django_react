@@ -32,6 +32,7 @@ class Tag(models.Model):
         return self.name
     
     class Meta:
+        ordering = ['id']
         verbose_name = _('Tag')
         verbose_name_plural = _('Tags')
 
@@ -85,20 +86,19 @@ class Post(models.Model):
     
 
     def save(self, *args, **kwargs):
+        if self.id:
+            return super().save(*args, **kwargs)
+
         now = timezone.now()
 
         slug = f'{now.year}-{now.month}-{now.day}-'
-        slug += f'{now.hour}-{now.minute}-{now.second}-'
+        slug += f'{now.hour}-{now.minute}-{now.second}-{now.microsecond}-'
 
         # now slugify created time and title
         try:
             self.slug = slug + slugify(self.title)
             return super().save(*args, **kwargs)
         except IntegrityError:
-            slug += f'{now.microsecond}-'
-            self.slug = slug + slugify(self.title)
-            return super().save(*args, **kwargs)
-        except:
             from uuid import uuid4
             slug += f'{uuid4().hex}-'
             self.slug = slug + slugify(self.title)
