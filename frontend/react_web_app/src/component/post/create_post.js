@@ -11,6 +11,7 @@ class CreatePost extends Component {
     state = {
         title: '',
         image: '',
+        imgSrc: '',
         content: '',
         tags: [],
         fetchedTags: [],
@@ -37,16 +38,30 @@ class CreatePost extends Component {
     }
     
 
-    onFileChange = e => {
+    onImageChange = e => {
         const file = e.target.files[0];
+        
+        // change image address to new file address
         this.setState({
             [e.target.name] : file
-        })
+        });
+
+        // read content of new file address and assign it to imgSrc
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onloadend = (e) => {
+            this.setState({
+                imgSrc : [reader.result]
+            })
+        };
     }
 
 
-    onSubmit = (dispatch) => e => {
-        e.preventDefault()
+    onSubmit = (dispatch, authenticate) => async e => {
+        e.preventDefault();
+
+        await authenticate();
         
         const access_token = localStorage.getItem('access');
         if (!access_token) {
@@ -109,12 +124,13 @@ class CreatePost extends Component {
 
 
     render() {
-        const {title, content, tags} = this.state;
+        const { title, content, tags, imgSrc } = this.state;
 
         return (
             <Consumer>
                 { value => {
                     const { dispatch, user } = value.state;
+                    const { authenticate } = value;
 
                     return !user.isAuthenticated ? (
                         // if user isn't logged in, redirect to login
@@ -124,7 +140,7 @@ class CreatePost extends Component {
                             <div className="card card-body mt-5">
                                 <h2 className="text-center">Submit New Post</h2>
 
-                                <form onSubmit={this.onSubmit(dispatch)}>
+                                <form onSubmit={this.onSubmit(dispatch, authenticate)}>
                                     <div className="form-group">
                                         <label>Title</label>
                                         <input
@@ -154,9 +170,14 @@ class CreatePost extends Component {
                                             className="form-control"
                                             type="file"
                                             name="image"
-                                            onChange={this.onFileChange}
+                                            onChange={this.onImageChange}
                                             required
                                         />
+                                    </div>
+
+                                    <div>
+                                        {/* preview image */}
+                                        <img src={imgSrc} className="img-fluid img-thumbnail" alt={title} />
                                     </div>
 
                                     <div className="form-group">

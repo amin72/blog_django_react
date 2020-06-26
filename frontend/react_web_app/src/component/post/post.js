@@ -20,14 +20,17 @@ class Post extends Component {
     }
 
     
-    deletePost = async (slug, dispatch) => {
+    deletePost = async (slug, dispatch, authenticate) => {
+        // authenticate user
+        await authenticate();
+        
         // access token
         const access_token = localStorage.getItem('access');
         const url = `http://127.0.0.1:8000/api/v1/posts/${slug}/`;
 
         if (access_token) {
             try {
-                const response = await axios.delete(url, {
+                await axios.delete(url, {
                     headers: {
                         Authorization: `Bearer ${access_token}`
                     }
@@ -50,7 +53,6 @@ class Post extends Component {
 
     fetchPost = async () => {
         // access token
-        const access_token = localStorage.getItem('access');
         const { slug } = this.props.match.params;
         const url = `http://127.0.0.1:8000/api/v1/posts/${slug}/`;
         
@@ -88,6 +90,7 @@ class Post extends Component {
                 { value => {
 
                     const { user, dispatch } = value.state;
+                    const { authenticate } = value;
                     const { post } = this.state;
 
                     return (
@@ -111,7 +114,7 @@ class Post extends Component {
                                         <div className="col-12">
                                             <hr />
                                             <Link to={`/post/${post.slug}/edit`} className="btn btn-success mr-2">Edit Post</Link>
-                                            <button onClick={() => this.deletePost(slug, dispatch)} className="btn btn-danger">Delete Post</button>
+                                            <button onClick={() => this.deletePost(slug, dispatch, authenticate)} className="btn btn-danger">Delete Post</button>
                                         </div>
                                     </div>
                                     )}

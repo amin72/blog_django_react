@@ -4,18 +4,16 @@ import axios from 'axios'
 
 import {
     GET_TOKEN_SUCCESS,
-    GET_TOKEN_FAIL,
     CREATE_USER_SUCCESS,
-    CREATE_USER_FAIL,
     LOGOUT_USER_SUCCESS,
-    LOGOUT_USER_FAIL,
     GET_USER_DETAIL_SUCCESS,
     GET_USER_DETAIL_FAIL,
+    REFRESH_TOKEN_SUCCESS,
+    REFRESH_TOKEN_FAIL,
     FETCH_POSTS_SUCCESS,
-    FETCH_POSTS_FAIL,
 } from './types'
 
-import { USER_DETAIL_URL, FETCH_POSTS_URL } from '../other/urls';
+import { USER_DETAIL_URL, REFRESH_TOKEN_URL } from '../other/urls';
 
 
 export const Context = React.createContext();
@@ -79,33 +77,81 @@ export class Provider extends Component {
     }
 
 
-    authenticate = async () => {
+    getUserDetail = async (access_token) => {
         const { dispatch } = this.state;
 
-        // access token
-        const access_token = localStorage.getItem('access');
-
         if (access_token) {
-            await axios.post(USER_DETAIL_URL, {}, {
-                headers: {
-                    Authorization: `Bearer ${access_token}`
-                }
-            })
-            .then(res => {
-                const username = res.data.user.username;
-                
+            try {
+                const response = await axios.post(USER_DETAIL_URL, {}, {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    }
+                });
+
+                const username = response.data.user.username;
+
                 dispatch({
                     type: GET_USER_DETAIL_SUCCESS,
                     payload: username
                 });
 
-                sessionStorage.user = JSON.stringify({name: username});
-            }).catch(err => {
+                return true; // authentication was successfull
+            } catch(err) {
                 dispatch({
                     type: GET_USER_DETAIL_FAIL
-                })
-            })
+                });
+            };
         }
+
+        return false;
+    }
+
+
+    refreshAccessToken = async (refresh_token) => {
+        const { dispatch } = this.state;
+
+        if (refresh_token) {
+            const refresh_data = {
+                refresh: refresh_token
+            };
+
+            try {
+                const response = await axios.post(REFRESH_TOKEN_URL, refresh_data);
+                const access_token = response.data.access;
+                localStorage.setItem('access', access_token);
+                
+                dispatch({
+                    type: REFRESH_TOKEN_SUCCESS
+                });
+
+                return access_token;
+            } catch(err) {
+                // TODO: diplay a message, and remove username from state
+                dispatch({
+                    type: REFRESH_TOKEN_FAIL
+                });
+            }
+        }
+        
+        return null;
+    }
+
+
+    authenticate = async () => {
+        // try to authenticate user
+        let access_token = localStorage.getItem('access');
+
+        if (await this.getUserDetail(access_token)) {
+            return true;
+        }
+
+        // refresh token
+        const refresh_token = localStorage.getItem('refresh');
+        // get new access token
+        access_token = await this.refreshAccessToken(refresh_token);
+
+        // try to authenticate user with new access token
+        await this.getUserDetail(access_token);
     }
 
 

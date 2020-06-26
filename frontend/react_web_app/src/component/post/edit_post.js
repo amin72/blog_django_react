@@ -22,7 +22,6 @@ class EditPost extends Component {
     
     fetchPost = async () => {
         // access token
-        const access_token = localStorage.getItem('access');
         const { slug } = this.props.match.params;
         const url = `http://127.0.0.1:8000/api/v1/posts/${slug}/`;
         
@@ -100,8 +99,10 @@ class EditPost extends Component {
     }
 
 
-    onSubmit = (slug, dispatch) => e => {
-        e.preventDefault()
+    onSubmit = (slug, dispatch, authenticate) => async e => {
+        e.preventDefault();
+
+        await authenticate();
 
         const url = `http://127.0.0.1:8000/api/v1/posts/${slug}/`;
         
@@ -196,13 +197,14 @@ class EditPost extends Component {
 
 
     render() {
-        const { title, content, tags, image, imgSrc } = this.state;
+        const { title, content, tags, imgSrc } = this.state;
         const { slug } = this.props.match.params;
 
         return (
             <Consumer>
                 { value => {
                     const { dispatch, user } = value.state;
+                    const { authenticate } = value;
 
                     return !user.isAuthenticated ? (
                         // if user isn't logged in, redirect to login
@@ -212,7 +214,7 @@ class EditPost extends Component {
                             <div className="card card-body mt-5">
                                 <h2 className="text-center">Submit New Post</h2>
 
-                                <form onSubmit={this.onSubmit(slug, dispatch)}>
+                                <form onSubmit={this.onSubmit(slug, dispatch, authenticate)}>
                                     <div className="form-group">
                                         <label>Title</label>
                                         <input
@@ -248,7 +250,7 @@ class EditPost extends Component {
 
                                     <div>
                                         {/* preview image */}
-                                        <img src={imgSrc} className="img-fluid img-thumbnail" />
+                                        <img src={imgSrc} className="img-fluid img-thumbnail" alt={title} />
                                     </div>
 
                                     <div className="form-group">

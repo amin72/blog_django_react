@@ -58,8 +58,8 @@ class Login extends Component {
 
                     return user.isAuthenticated ? (
                         // if user is authenticated redirect to index
-                        <Redirect to={this.props.location.state && 
-                            this.props.location.state.from.pathname || "/"} />
+                        <Redirect to={ (this.props.location.state && 
+                            this.props.location.state.from.pathname) || "/"} />
                     ) : (
                         <div className="col-md-6 m-auto">
                             <div className="card card-body mt-5">
