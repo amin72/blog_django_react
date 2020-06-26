@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/bin/node /home/amin/.npm-global/bin/yarn add popper.js
+  /usr/bin/node /home/amin/.npm-global/bin/yarn upgrade
 
 PATH: 
   /home/amin/.local/bin:/home/amin/.cargo/bin:/home/amin/.local/bin:/home/amin/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/amin/workspace/IDE/Intelj-idea-IC-183.4886.37/bin:/home/amin/workspace/IDE/android-studio/bin:/home/amin/workspace/go/bin:/home/amin/workspace/utilities/:/home/amin/.npm-global/bin:/home/amin/workspace/flutter/bin:/usr/lib/dart/bin/:/home/amin/workspace/IDE/sdk/emulator:/home/amin/workspace/IDE/sdk/tools:/home/amin/workspace/IDE/sdk/tools/bin:/home/amin/workspace/IDE/sdk/platform-tools:/home/amin/bin:/home/amin/.composer/vendor/bin:/home/amin/.cargo/bin
@@ -14,12 +14,11 @@ Platform:
   linux x64
 
 Trace: 
-  Error: Client network socket disconnected before secure TLS connection was established
-      at TLSSocket.onConnectEnd (_tls_wrap.js:1125:19)
-      at Object.onceWrapper (events.js:286:20)
-      at TLSSocket.emit (events.js:203:15)
-      at endReadableNT (_stream_readable.js:1145:12)
-      at process._tickCallback (internal/process/next_tick.js:63:19)
+  Error [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames: Host: registry.yarnpkg.com. is not in the cert's altnames: DNS:*.googleapis.com, DNS:*.clients6.google.ac, DNS:*.clients6.google.ad, DNS:*.clients6.google.ae, DNS:*.clients6.google.af, DNS:*.clients6.google.ag, DNS:*.clients6.google.ai, DNS:*.clients6.google.al, DNS:*.clients6.google.am, DNS:*.clients6.google.as, DNS:*.clients6.google.at, DNS:*.clients6.google.az, DNS:*.clients6.google.ba, DNS:*.clients6.google.be, DNS:*.clients6.google.bf, DNS:*.clients6.google.bg, DNS:*.clients6.google.bi, DNS:*.clients6.google.bj, DNS:*.clients6.google.bs, DNS:*.clients6.google.bt, DNS:*.clients6.google.by, DNS:*.clients6.google.ca, DNS:*.clients6.google.cat, DNS:*.clients6.google.cc, DNS:*.clients6.google.cd, DNS:*.clients6.google.cf, DNS:*.clients6.google.cg, DNS:*.clients6.google.ch, DNS:*.clients6.google.ci, DNS:*.clients6.google.cl, DNS:*.clients6.google.cm, DNS:*.clients6.google.cn, DNS:*.clients6.google.co.ao, DNS:*.clients6.google.co.bw, DNS:*.clients6.google.co.ck, DNS:*.clients6.google.co.cr, DNS:*.clients6.google.co.hu, DNS:*.clients6.google.co.id, DNS:*.clients6.google.co.il, DNS:*.clients6.google.co.im, DNS:*.clients6.google.co.in, DNS:*.clients6.google.co.je, DNS:*.clients6.google.co.jp, DNS:*.clients6.google.co.ke, DNS:*.clients6.google.co.kr, DNS:*.clients6.google.co.ls, DNS:*.clients6.google.co.ma, DNS:*.clients6.google.co.mz, DNS:*.clients6.google.co.nz, DNS:*.clients6.google.co.th, DNS:*.clients6.google.co.tz, DNS:*.clients6.google.co.ug, DNS:*.clients6.google.co.uk, DNS:*.clients6.google.co.uz, DNS:*.clients6.google.co.ve, DNS:*.clients6.google.co.vi, DNS:*.clients6.google.co.za, DNS:*.clients6.google.co.zm, DNS:*.clients6.google.co.zw, DNS:*.clients6.google.com, DNS:*.clients6.google.com.af, DNS:*.clients6.google.com.ag, DNS:*.clients6.google.com.ai, DNS:*.clients6.google.com.ar, DNS:*.clients6.google.com.au, DNS:*.clients6.google.com.bd, DNS:*.clients6.google.com.bh, DNS:*.clients6.google.com.bn, DNS:*.clients6.google.com.bo, DNS:*.clients6.google.com.br, DNS:*.clients6.google.com.by, DNS:*.clients6.google.com.bz, DNS:*.clients6.google.com.cn, DNS:*.clients6.google.com.co, DNS:*.clients6.google.com.cu, DNS:*.clients6.google.com.cy, DNS:*.clients6.google.com.do, DNS:*.clients6.google.com.ec, DNS:*.clients6.google.com.eg, DNS:*.clients6.google.com.et, DNS:*.clients6.google.com.fj, DNS:*.clients6.google.com.ge, DNS:*.clients6.google.com.gh, DNS:*.clients6.google.com.gi, DNS:*.clients6.google.com.gr, DNS:*.clients6.google.com.gt, DNS:*.clients6.google.com.hk, DNS:*.clients6.google.com.iq, DNS:*.clients6.google.com.jm, DNS:*.clients6.google.com.jo, DNS:*.clients6.google.com.kh, DNS:*.clients6.google.com.kw, DNS:*.clients6.google.com.lb, DNS:*.clients6.google.com.ly, DNS:*.clients6.google.com.mm, DNS:*.clients6.google.com.mt, DNS:*.clients6.google.com.mx, DNS:*.clients6.google.com.my, DNS:*.clients6.google.com.na, DNS:*.clients6.google.com.nf, DNS:*.clients6.google.com.ng, DNS:*.clients6.google.com.ni, DNS:*.clients6.google.com.np, DNS:*.clients6.google.com.nr, DNS:*.clients6.google.com.om, DNS:*.clients6.google.com.pa, DNS:*.clients6.google.com.pe, DNS:*.clients6.google.com.pg, DNS:*.clients6.google.com.ph, DNS:*.clients6.google.com.pk, DNS:*.clients6.google.com.pl, DNS:*.clients6.google.com.pr, DNS:*.clients6.google.com.py, DNS:*.clients6.google.com.qa, DNS:*.clients6.google.com.ru, DNS:*.clients6.google.com.sa, DNS:*.clients6.google.com.sb, DNS:*.clients6.google.com.sg, DNS:*.clients6.google.com.sl, DNS:*.clients6.google.com.sv, DNS:*.clients6.google.com.tj, DNS:*.clients6.google.com.tn, DNS:*.clients6.google.com.tr, DNS:*.clients6.google.com.tw, DNS:*.clients6.google.com.ua, DNS:*.clients6.google.com.uy, DNS:*.clients6.google.com.vc, DNS:*.clients6.google.com.ve, DNS:*.clients6.google.com.vn, DNS:*.clients6.google.cv, DNS:*.clients6.google.cz, DNS:*.clients6.google.de, DNS:*.clients6.google.dj, DNS:*.clients6.google.dk, DNS:*.clients6.google.dm, DNS:*.clients6.google.dz, DNS:*.clients6.google.ee, DNS:*.clients6.google.es, DNS:*.clients6.google.eus, DNS:*.clients6.google.fi, DNS:*.clients6.google.fm, DNS:*.clients6.google.fr, DNS:*.clients6.google.frl, DNS:*.clients6.google.ga, DNS:*.clients6.google.gal, DNS:*.clients6.google.ge, DNS:*.clients6.google.gg, DNS:*.clients6.google.gl, DNS:*.clients6.google.gm, DNS:*.clients6.google.gp, DNS:*.clients6.google.gr, DNS:*.clients6.google.gy, DNS:*.clients6.google.hk, DNS:*.clients6.google.hn, DNS:*.clients6.google.hr, DNS:*.clients6.google.ht, DNS:*.clients6.google.hu, DNS:*.clients6.google.ie, DNS:*.clients6.google.im, DNS:*.clients6.google.in, DNS:*.clients6.google.info, DNS:*.clients6.google.iq, DNS:*.clients6.google.ir, DNS:*.clients6.google.is, DNS:*.clients6.google.it, DNS:*.clients6.google.it.ao, DNS:*.clients6.google.je, DNS:*.clients6.google.jo, DNS:*.clients6.google.jobs, DNS:*.clients6.google.jp, DNS:*.clients6.google.kg, DNS:*.clients6.google.ki, DNS:*.clients6.google.kz, DNS:*.clients6.google.la, DNS:*.clients6.google.li, DNS:*.clients6.google.lk, DNS:*.clients6.google.lt, DNS:*.clients6.google.lu, DNS:*.clients6.google.lv, DNS:*.clients6.google.md, DNS:*.clients6.google.me, DNS:*.clients6.google.mg, DNS:*.clients6.google.mk, DNS:*.clients6.google.ml, DNS:*.clients6.google.mn, DNS:*.clients6.google.ms, DNS:*.clients6.google.mu, DNS:*.clients6.google.mv, DNS:*.clients6.google.mw, DNS:*.clients6.google.ne, DNS:*.clients6.google.ne.jp, DNS:*.clients6.google.net, DNS:*.clients6.google.ng, DNS:*.clients6.google.nl, DNS:*.clients6.google.no, DNS:*.clients6.google.nr, DNS:*.clients6.google.nu, DNS:*.clients6.google.off.ai, DNS:*.clients6.google.pk, DNS:*.clients6.google.pl, DNS:*.clients6.google.pn, DNS:*.clients6.google.ps, DNS:*.clients6.google.pt, DNS:*.clients6.google.ro, DNS:*.clients6.google.rs, DNS:*.clients6.google.ru, DNS:*.clients6.google.rw, DNS:*.clients6.google.sc, DNS:*.clients6.google.se, DNS:*.clients6.google.sh, DNS:*.clients6.google.si, DNS:*.clients6.google.sk, DNS:*.clients6.google.sm, DNS:*.clients6.google.sn, DNS:*.clients6.google.so, DNS:*.clients6.google.sr, DNS:*.clients6.google.st, DNS:*.clients6.google.td, DNS:*.clients6.google.tel, DNS:*.clients6.google.tg, DNS:*.clients6.google.tk, DNS:*.clients6.google.tl, DNS:*.clients6.google.tm, DNS:*.clients6.google.tn, DNS:*.clients6.google.to, DNS:*.clients6.google.tt, DNS:*.clients6.google.us, DNS:*.clients6.google.uz, DNS:*.clients6.google.vg, DNS:*.clients6.google.vu, DNS:*.clients6.google.ws, DNS:*.cloudendpointsapis.com, DNS:*.p.googleapis.com, DNS:cloudendpointsapis.com, DNS:googleapis.com
+      at Object.checkServerIdentity (tls.js:250:17)
+      at TLSSocket.onConnectSecure (_tls_wrap.js:1098:27)
+      at TLSSocket.emit (events.js:198:13)
+      at TLSSocket._finishInit (_tls_wrap.js:666:8)
 
 npm manifest: 
   {
@@ -30,7 +29,10 @@ npm manifest:
       "@testing-library/jest-dom": "^4.2.4",
       "@testing-library/react": "^9.3.2",
       "@testing-library/user-event": "^7.1.2",
+      "axios": "^0.19.2",
       "bootstrap": "^4.5.0",
+      "jquery": "^3.5.1",
+      "popper.js": "^1.16.1",
       "react": "^16.13.1",
       "react-dom": "^16.13.1",
       "react-router": "^5.2.0",
@@ -2264,6 +2266,13 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.9.1.tgz#7e33d8f7d449b3f673cd72deb9abdc552dbe528e"
     integrity sha512-wMHVg2EOHaMRxbzgFJ9gtjOOCrI80OHLG14rxi28XwOW8ux6IiEbRCGGGqCtdAIg4FQCbW20k9RsT4y3gJlFug==
   
+  axios@^0.19.2:
+    version "0.19.2"
+    resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
+    integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
+    dependencies:
+      follow-redirects "1.5.10"
+  
   axobject-query@^2.0.2:
     version "2.1.2"
     resolved "https://registry.yarnpkg.com/axobject-query/-/axobject-query-2.1.2.tgz#2bdffc0371e643e5f03ba99065d5179b9ca79799"
@@ -3583,6 +3592,13 @@ Lockfile:
     dependencies:
       ms "2.0.0"
   
+  debug@=3.1.0:
+    version "3.1.0"
+    resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
+    integrity sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
+    dependencies:
+      ms "2.0.0"
+  
   debug@^3.0.0, debug@^3.1.1, debug@^3.2.5:
     version "3.2.6"
     resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
@@ -4637,6 +4653,13 @@ Lockfile:
     dependencies:
       inherits "^2.0.3"
       readable-stream "^2.3.6"
+  
+  follow-redirects@1.5.10:
+    version "1.5.10"
+    resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.10.tgz#7b7a9f9aea2fdff36786a94ff643ed07f4ff5e2a"
+    integrity sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
+    dependencies:
+      debug "=3.1.0"
   
   follow-redirects@^1.0.0:
     version "1.10.0"
@@ -6208,6 +6231,11 @@ Lockfile:
       import-local "^2.0.0"
       jest-cli "^24.9.0"
   
+  jquery@^3.5.1:
+    version "3.5.1"
+    resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.1.tgz#d7b4d08e1bfdb86ad2f1a3d039ea17304717abb5"
+    integrity sha512-XwIBPqcMn57FxfT+Go5pzySnm4KWkT1Tv7gjrpT1srtf8Weynl6R273VJ5GjkRb51IzMp5nbaPjJXMWeju2MKg==
+  
   "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
     version "4.0.0"
     resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -7724,6 +7752,11 @@ Lockfile:
     integrity sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==
     dependencies:
       ts-pnp "^1.1.6"
+  
+  popper.js@^1.16.1:
+    version "1.16.1"
+    resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+    integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
   
   portfinder@^1.0.25:
     version "1.0.25"
